@@ -16,7 +16,7 @@ module.exports = function(data) {
         let valRes = v.validate(entry, dataSchema);
         if (!valRes.valid) {
             // return the first error message
-            return [false, `Invalid data format for entry ${i}: ${valRes.errors[0].message}`];
+            return [false, `Invalid data format for entry ${i}: ${valRes.errors[0].property + " " + valRes.errors[0].message}`];
         }
     }
 
