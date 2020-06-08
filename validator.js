@@ -10,8 +10,8 @@ var v = new Validator();
 
 // return true if valid body JSON
 // expect an array of JSON objects, each containing
-module.exports = function(data) {
-    for (i = 0; i < data.length; i++){
+module.exports = function (data) {
+    for (i = 0; i < data.length; i++) {
         let entry = data[i];
         let valRes = v.validate(entry, dataSchema);
         if (!valRes.valid) {

@@ -2,7 +2,9 @@
  * Defines the data schema and functions for creating site/site detail objects 
  */
 module.exports.dataSchema = {
+    "type": "object",
     "id": "/dataSchema",
+
     "type": "object",
     "properties": {
         "siteName": { "type": "string" },
@@ -58,8 +60,32 @@ module.exports.dataSchema = {
         "stockStatus": { "type": "string" },
         "reminderMethod": { "type": "string" },
     },
-    "required": ["siteName", "siteStreetAddress", "siteCity", "siteCountry", "siteState", "siteZip"],
-    "throwError": false
+    "required": ["siteName"],
+
+    // accept address in any of the following forms
+    // TODO: add state validation
+    "anyOf": [
+        {
+            "properties": {
+                "siteStreetAddress": { "type": "string" }
+            },
+            "required": ["siteStreetAddress"]
+        },
+        {
+            "properties": {
+                "siteZip": { "type": "string" }
+            },
+            "required": ["siteZip"]
+        },
+        {
+            "properties": {
+                "siteCity": { "type": "string" },
+                "siteState": { "type": "string" }
+            },
+            "required": ["siteCity", "siteState"]
+        },
+    ],
+    "throwError": false,
 }
 
 module.exports.populateSiteFields = function (site, fromEmail, updateMethod) {
