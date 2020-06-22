@@ -1,65 +1,8 @@
-'use strict';
-
-/*
- * Defines the data schema and functions for creating site/site detail objects
- */
-
 module.exports.dataSchema = {
     id: '/dataSchema',
     type: 'object',
     properties: {
-        siteName: { type: 'string' },
-        siteStreetAddress: { type: 'string' },
-        siteCity: { type: 'string' },
-        siteState: { type: 'string' },
-        siteZip: { type: 'string' },
-        siteCountry: { type: 'string' },
-        siteCounty: { type: 'string' },
-        siteNeighborhood: { type: 'string' },
-        siteType: { type: 'string' },
-        siteSubType: { type: 'string' },
-        lat: { type: 'string' },
-        lng: { type: 'string' },
-        EFROID: { type: 'string' },
-        publicContactMethod: { type: 'string' },
-        publicPhone: { type: 'string' },
-        publicEmail: { type: 'string' },
-        website: { type: 'string' },
-        socialMedia: { type: 'string' },
-        contactName: { type: 'string' },
-        contactPhone: { type: 'string' },
-        contactEmail: { type: 'string' },
-        status: { type: 'string' },
-        publicOpenness: { type: 'string' },
-        deliveryEligibility: { type: 'string' },
-        eligibilityRequirements: { type: 'string' },
-        hoursEligibility1: { type: 'string' },
-        hours1: { type: 'string' },
-        hoursEligibility2: { type: 'string' },
-        hours2: { type: 'string' },
-        hoursEligibility3: { type: 'string' },
-        hours3: { type: 'string' },
-        validUntil: { type: 'string' },
-        acceptsFoodDonations: { type: 'string' },
-        hasEnoughFood: { type: 'string' },
-        canReceiveBulk: { type: 'string' },
-        foodNeeds: { type: 'string' },
-        hasBabyFormula: { type: 'string' },
-        staffVolunteerNeeds: { type: 'string' },
-        recruitingAssistance: { type: 'string' },
-        otherNeeds: { type: 'string' },
-        covidChanges: { type: 'string' },
-        increasedDemandCauses: { type: 'string' },
-        totalFoodCommunityNeeds: { type: 'string' },
-        currentCapacity: { type: 'string' },
-        staffVolunteerReduction: { type: 'string' },
-        safetyPrecautions: { type: 'string' },
-        languages: { type: 'string' },
-        nearbyFoodPrograms: { type: 'string' },
-        notesGovRequests: { type: 'string' },
-        notesAnythingElse: { type: 'string' },
-        stockStatus: { type: 'string' },
-        reminderMethod: { type: 'string' },
+        siteName: { type: 'string', minLength: 3, maxLength: 174 }
     },
     required: ['siteName'],
 
@@ -68,37 +11,283 @@ module.exports.dataSchema = {
     anyOf: [
         {
             properties: {
-                siteStreetAddress: { type: 'string' }
+                siteStreetAddress: { type: 'string', minLength: 3, maxLength: 183 }
             },
             required: ['siteStreetAddress']
         },
         {
             properties: {
-                siteZip: { type: 'string' }
+                siteZip: { type: 'string', minLength: 4, maxLength: 10 }
             },
             required: ['siteZip']
         },
         {
             properties: {
-                siteCity: { type: 'string' },
-                siteState: { type: 'string' }
+                siteCity: { type: 'string', minLength: 3, maxLength: 183 },
+                siteState: { type: 'string', minLength: 2, maxLength: 2 }
             },
             required: ['siteCity', 'siteState']
-        },
+        }
     ],
-    throwError: false,
+    throwError: false
 };
 
-module.exports.populateSiteFields = function (site, fromEmail, updateMethod) {
+module.exports.detailsSchema = {
+    id: '/detailsSchema',
+    type: 'object',
+    properties: {
+        siteName: { type: 'string', minLength: 3, maxLength: 174 }
+    },
+    required: ['siteName'],
+    // checks if any details fields exist
+    anyOf: [
+        {
+            properties: {
+                publicContactMethod: { type: 'string', minLength: 3, maxLength: 174 }
+            },
+            required: ['publicContactMethod']
+        },
+        {
+            properties: {
+                publicPhone: { type: 'string', minLength: 7, maxLength: 174 }
+            },
+            required: ['publicPhone']
+        },
+        {
+            properties: {
+                publicEmail: { type: 'string', minLength: 6, maxLength: 255 }
+            },
+            required: ['publicEmail']
+        },
+        {
+            properties: {
+                website: { type: 'string', minLength: 4, maxLength: 255 }
+            },
+            required: ['website']
+        },
+        {
+            properties: {
+                socialMedia: { type: 'string', minLength: 3, maxLength: 255 }
+            },
+            required: ['socialMedia']
+        },
+        {
+            properties: {
+                contactName: { type: 'string', minLength: 3, maxLength: 255 }
+            },
+            required: ['contactName']
+        },
+        {
+            properties: {
+                contactPhone: { type: 'string', minLength: 7, maxLength: 174 }
+            },
+            required: ['contactPhone']
+        },
+        {
+            properties: {
+                contactEmail: { type: 'string', minLength: 6, maxLength: 255 }
+            },
+            required: ['contactEmail']
+        },
+        {
+            properties: {
+                status: { type: 'string', minLength: 4, maxLength: 255 }
+            },
+            required: ['status']
+        },
+        {
+            properties: {
+                publicOpenness: { type: 'string', minLength: 3, maxLength: 255 }
+            },
+            required: ['publicOpenness']
+        },
+        {
+            properties: {
+                deliveryEligibility: { type: 'string', minLength: 3 }
+            },
+            required: ['deliveryEligibility']
+        },
+        {
+            properties: {
+                eligibilityRequirements: { type: 'string', minLength: 3 }
+            },
+            required: ['eligibilityRequirements']
+        },
+        {
+            properties: {
+                hoursEligibility1: { type: 'string', minLength: 3 }
+            },
+            required: ['hoursEligibility1']
+        },
+        {
+            properties: {
+                hours1: { type: 'string', minLength: 3 }
+            },
+            required: ['hours1']
+        },
+        {
+            properties: {
+                hoursEligibility2: { type: 'string', minLength: 3 }
+            },
+            required: ['hoursEligibility2']
+        },
+        {
+            properties: {
+                hours2: { type: 'string', minLength: 3 }
+            },
+            required: ['hours2']
+        },
+        {
+            properties: {
+                hoursEligibility3: { type: 'string', minLength: 3 }
+            },
+            required: ['hoursEligibility3']
+        },
+        {
+            properties: {
+                hours3: { type: 'string', minLength: 3 }
+            },
+            required: ['hours3']
+        },
+        {
+            properties: {
+                validUntil: { type: 'string', minLength: 3 }
+            },
+            required: ['validUntil']
+        },
+        {
+            properties: {
+                acceptsFoodDonations: { type: 'string', minLength: 1 }
+            },
+            required: ['acceptsFoodDonations']
+        },
+        {
+            properties: {
+                hasEnoughFood: { type: 'string', minLength: 1 }
+            },
+            required: ['hasEnoughFood']
+        },
+        {
+            properties: {
+                canReceiveBulk: { type: 'string', minLength: 1 }
+            },
+            required: ['canReceiveBulk']
+        },
+        {
+            properties: {
+                foodNeeds: { type: 'string', minLength: 3 }
+            },
+            required: ['foodNeeds']
+        },
+        {
+            properties: {
+                hasBabyFormula: { type: 'string', minLength: 1 }
+            },
+            required: ['hasBabyFormula']
+        },
+        {
+            properties: {
+                staffVolunteerNeeds: { type: 'string', minLength: 1 }
+            },
+            required: ['staffVolunteerNeeds']
+        },
+        {
+            properties: {
+                recruitingAssistance: { type: 'string', minLength: 3 }
+            },
+            required: ['recruitingAssistance']
+        },
+        {
+            properties: {
+                otherNeeds: { type: 'string', minLength: 3 }
+            },
+            required: ['otherNeeds']
+        },
+        {
+            properties: {
+                covidChanges: { type: 'string', minLength: 3 }
+            },
+            required: ['covidChanges']
+        },
+        {
+            properties: {
+                increasedDemandCauses: { type: 'string', minLength: 3 }
+            },
+            required: ['increasedDemandCauses']
+        },
+        {
+            properties: {
+                totalFoodCommunityNeeds: { type: 'string', minLength: 3 }
+            },
+            required: ['totalFoodCommunityNeeds']
+        },
+        {
+            properties: {
+                currentCapacity: { type: 'string', minLength: 2 }
+            },
+            required: ['currentCapacity']
+        },
+        {
+            properties: {
+                staffVolunteerReduction: { type: 'string', minLength: 1 }
+            },
+            required: ['staffVolunteerReduction']
+        },
+        {
+            properties: {
+                safetyPrecautions: { type: 'string', minLength: 3 }
+            },
+            required: ['safetyPrecautions']
+        },
+        {
+            properties: {
+                languages: { type: 'string', minLength: 2 }
+            },
+            required: ['languages']
+        },
+        {
+            properties: {
+                nearbyFoodPrograms: { type: 'string', minLength: 3 }
+            },
+            required: ['nearbyFoodPrograms']
+        },
+        {
+            properties: {
+                notesGovRequests: { type: 'string', minLength: 3 }
+            },
+            required: ['notesGovRequests']
+        },
+        {
+            properties: {
+                notesAnythingElse: { type: 'string', minLength: 3 }
+            },
+            required: ['notesAnythingElse']
+        },
+        {
+            properties: {
+                stockStatus: { type: 'string', minLength: 1 }
+            },
+            required: ['stockStatus']
+        },
+        {
+            properties: {
+                reminderMethod: { type: 'string', minLength: 3, maxLength: 255 }
+            },
+            required: ['reminderMethod']
+        }
+    ],
+    throwError: false
+};
+
+module.exports.populateSiteFields = (site, fromEmail, updateMethod) => {
     return {
         fields: {
             uploadedBy: { email: fromEmail },
             siteName: site.siteName,
-            EFROID: site.EFROID,
             siteStreetAddress: site.siteStreetAddress,
             siteCity: site.siteCity,
             siteState: site.siteState,
-            siteZip: site.siteZip ? site.siteZip + '' : null,
+            siteZip: site.siteZip,
             siteCountry: site.siteCountry,
             siteCounty: site.siteCounty,
             siteNeighborhood: site.siteNeighborhood,
@@ -106,19 +295,23 @@ module.exports.populateSiteFields = function (site, fromEmail, updateMethod) {
             siteSubType: site.siteSubType,
             lat: site.lat,
             lng: site.lng,
+            EIN: site.EIN,
+            EFROID: site.EFROID,
             createdMethod: updateMethod
         }
     };
 };
 
-module.exports.populateDetailsFields = function (site, id, fromEmail, updateMethod) {
+module.exports.populateDetailsFields = (site, id, fromEmail, updateMethod) => {
     return {
         fields: {
             Site: [id],
             uploadedBy: { email: fromEmail },
             status: site.status,
+            stockStatus: site.stockStatus,
+            reminderMethod: site.reminderMethod,
             contactName: site.contactName,
-            contactPhone: site.contactPhone ? site.contactPhone + '' : null,
+            contactPhone: site.contactPhone,
             contactEmail: site.contactEmail,
             publicOpenness: site.publicOpenness,
             deliveryEligibility: site.deliveryEligibility,
@@ -139,7 +332,7 @@ module.exports.populateDetailsFields = function (site, id, fromEmail, updateMeth
             recruitingAssistance: site.recruitingAssistance,
             otherNeeds: site.otherNeeds,
             publicContactMethod: site.publicContactMethod,
-            publicPhone: site.publicPhone ? site.publicPhone + '' : null,
+            publicPhone: site.publicPhone,
             publicEmail: site.publicEmail,
             website: site.website,
             socialMedia: site.socialMedia,
@@ -152,7 +345,7 @@ module.exports.populateDetailsFields = function (site, id, fromEmail, updateMeth
             languages: site.languages,
             nearbyFoodPrograms: site.nearbyFoodPrograms,
             notesGovRequests: site.notesGovRequests,
-            notesAnythingElse: site.notesAnythingElse ? site.notesAnythingElse + '' : null,
+            notesAnythingElse: site.notesAnythingElse,
             createdMethod: updateMethod
         }
     };
